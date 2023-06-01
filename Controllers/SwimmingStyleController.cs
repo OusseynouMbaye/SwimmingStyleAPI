@@ -29,26 +29,7 @@ namespace SwimmingStyleAPI.Controllers
             return Ok(swimmingStyleToReturn);
         }
 
-        /*// create to post
-        [HttpPost]
-        public SwimmingStyleDto PostSwimmingStyle(SwimmingStyleDto swimmingStyle)
-        {
-            return swimmingStyle;
-        }
-
-        // create to put
-        [HttpPut("{SwimmingStyleId}")]
-        public SwimmingStyleDto PutSwimmingStyle(int SwimmingStyleId, SwimmingStyleDto swimmingStyle)
-        {
-            return swimmingStyle;
-        }
-
-        // create to patch
-        [HttpPatch("{SwimmingStyleId}")]
-        public SwimmingStyleDto PatchSwimmingStyle(int SwimmingStyleId, SwimmingStyleDto swimmingStyle)
-        {
-            return swimmingStyle;
-        }*/
+       // create a post
 
     }
 }
