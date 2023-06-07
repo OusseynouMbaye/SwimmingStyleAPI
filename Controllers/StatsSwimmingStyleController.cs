@@ -79,25 +79,5 @@ namespace SwimmingStyleAPI.Controllers
             //nameof(GetswimmingstyleById)
         }
 
-     /*   [HttpPost]
-        public ActionResult<SwimmingStyleDto> CreateSwimmingStyle([FromBody] SwimmingStyleForCreation swimmingStyle)
-        {
-            // demo purposes - to be improved 
-            var maxSwimmingStyleId = SwimmingStyleDataStore.Current.SwimmingStyles.Max(swimStyle => swimStyle.SwimmingStyleId);
-            // need to mapping because we work with swimming style dto and i need to create stats dto
-            var finalSwimmingStyle = new SwimmingStyleDto()
-            {
-                SwimmingStyleId = ++maxSwimmingStyleId,
-                Name = swimmingStyle.Name,
-                Image = swimmingStyle.Image,
-                Tags = swimmingStyle.Tags,
-                Description = swimmingStyle.Description
-            };
-            SwimmingStyleDataStore.Current.SwimmingStyles.Add(finalSwimmingStyle);
-            return CreatedAtRoute(
-                "GetSwimmingStyleById",
-                new { SwimmingStyleId = finalSwimmingStyle.SwimmingStyleId },
-                finalSwimmingStyle);
-        }*/
     }
 }

@@ -1,9 +1,16 @@
+using Microsoft.AspNetCore.HttpOverrides;
+using SwimmingStyleAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+/*builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();*/
 
 // Add services to the container.
 
 builder.Services.AddControllers(options =>
 {
+
     //options.RespectBrowserAcceptHeader = true;  // accept les en-têtes d’acceptation du navigateur
     options.ReturnHttpNotAcceptable = true;
 })
@@ -21,10 +28,20 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    //app.UseDeveloperExceptionPage();
 }
+//else
+//{
+//    app.UseHsts();
+//}
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+/*app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+*/
 app.UseAuthorization();
 
 app.MapControllers();

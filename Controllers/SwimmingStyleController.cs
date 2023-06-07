@@ -45,7 +45,7 @@ namespace SwimmingStyleAPI.Controllers
                 Description = swimmingStyle.Description
             };
             SwimmingStyleDataStore.Current.SwimmingStyles.Add(finalSwimmingStyle);
-            return CreatedAtRoute(nameof(GetSwimmingStyleById) ,
+            return CreatedAtAction(nameof(GetSwimmingStyleById) ,
                                new { SwimmingStyleId = finalSwimmingStyle.SwimmingStyleId },
                                               finalSwimmingStyle);
         }
