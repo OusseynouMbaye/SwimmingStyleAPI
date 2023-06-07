@@ -1,5 +1,6 @@
 ﻿using SQLitePCL;
-using SwimmingStyleAPI.Models;
+using SwimmingStyleAPI.Models.StatsDto;
+using SwimmingStyleAPI.Models.SwimmingStyleDto;
 
 namespace SwimmingStyleAPI
 {

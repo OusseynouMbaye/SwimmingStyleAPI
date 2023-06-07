@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SwimmingStyleAPI.Models;
+using SwimmingStyleAPI.Models.SwimmingStyleDto;
 
 namespace SwimmingStyleAPI.Controllers
 {
@@ -17,10 +17,10 @@ namespace SwimmingStyleAPI.Controllers
 
         // create to get by id
         [HttpGet("{SwimmingStyleId}")]
-        public ActionResult<SwimmingStyleDto> GetswimmingstyleById(int SwimmingStyleId)
+        public ActionResult<SwimmingStyleDto> GetSwimmingStyleById(int SwimmingStyleId)
         {
             var swimmingStyleToReturn = SwimmingStyleDataStore.Current.SwimmingStyles
-                  .Find(x => x.SwimmingStyleId == SwimmingStyleId);
+                  .FirstOrDefault(x => x.SwimmingStyleId == SwimmingStyleId);
             if (swimmingStyleToReturn == null)
             {
                 return NotFound();
@@ -29,7 +29,26 @@ namespace SwimmingStyleAPI.Controllers
             return Ok(swimmingStyleToReturn);
         }
 
-       // create a post
-
+        [HttpPost]
+        public ActionResult<SwimmingStyleDto> CreateSwimmingStyle([FromBody] SwimmingStyleForCreation swimmingStyle)
+        {
+            // demo purposes - to be improved 
+            // need to calculate the ide of the new item 
+            var maxSwimmingStyleId = SwimmingStyleDataStore.Current.SwimmingStyles.Max(p => p.SwimmingStyleId);
+            // need to mapping because we work with swimming style dto and i need to create swimming style dto
+            var finalSwimmingStyle = new SwimmingStyleDto()
+            {
+                SwimmingStyleId = swimmingStyle.SwimmingStyleId,
+                Name = swimmingStyle.Name,
+                Image = swimmingStyle.Image,
+                Tags = swimmingStyle.Tags,
+                Description = swimmingStyle.Description
+            };
+            SwimmingStyleDataStore.Current.SwimmingStyles.Add(finalSwimmingStyle);
+            return CreatedAtRoute(nameof(GetSwimmingStyleById) ,
+                               new { SwimmingStyleId = finalSwimmingStyle.SwimmingStyleId },
+                                              finalSwimmingStyle);
+        }
+       
     }
 }
