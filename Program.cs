@@ -1,5 +1,10 @@
+using Microsoft.AspNetCore.HttpOverrides;
+using SwimmingStyleAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigureCors();
+builder.Services.ConfigureIISIntegration();
 // Add services to the container.
 
 builder.Services.AddControllers(options =>
@@ -8,7 +13,7 @@ builder.Services.AddControllers(options =>
     options.ReturnHttpNotAcceptable = true;
 })
     .AddXmlDataContractSerializerFormatters();
-    //.AddNewtonsoftJson();
+//.AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,9 +26,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
 
 app.UseAuthorization();
 

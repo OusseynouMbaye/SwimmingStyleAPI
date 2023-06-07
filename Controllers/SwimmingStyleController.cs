@@ -38,17 +38,18 @@ namespace SwimmingStyleAPI.Controllers
             // need to mapping because we work with swimming style dto and i need to create swimming style dto
             var finalSwimmingStyle = new SwimmingStyleDto()
             {
-                SwimmingStyleId = swimmingStyle.SwimmingStyleId,
+                SwimmingStyleId = ++maxSwimmingStyleId,
                 Name = swimmingStyle.Name,
                 Image = swimmingStyle.Image,
                 Tags = swimmingStyle.Tags,
                 Description = swimmingStyle.Description
             };
             SwimmingStyleDataStore.Current.SwimmingStyles.Add(finalSwimmingStyle);
-            return CreatedAtRoute(nameof(GetSwimmingStyleById) ,
+            return CreatedAtAction(nameof(GetSwimmingStyleById),
                                new { SwimmingStyleId = finalSwimmingStyle.SwimmingStyleId },
                                               finalSwimmingStyle);
         }
-       
+
+
     }
 }
