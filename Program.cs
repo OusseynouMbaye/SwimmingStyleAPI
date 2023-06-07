@@ -4,11 +4,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
 {
-    options.RespectBrowserAcceptHeader = true;  // accept les en-têtes d’acceptation du navigateur
+    //options.RespectBrowserAcceptHeader = true;  // accept les en-têtes d’acceptation du navigateur
     options.ReturnHttpNotAcceptable = true;
 })
-    .AddXmlDataContractSerializerFormatters()
-    .AddNewtonsoftJson();
+    .AddXmlDataContractSerializerFormatters();
+    //.AddNewtonsoftJson();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

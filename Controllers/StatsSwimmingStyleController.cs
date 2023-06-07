@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SwimmingStyleAPI.Models;
+using SwimmingStyleAPI.Models.StatsDto;
+using SwimmingStyleAPI.Models.SwimmingStyleDto;
 
 namespace SwimmingStyleAPI.Controllers
 {
@@ -21,9 +22,8 @@ namespace SwimmingStyleAPI.Controllers
             return Ok(swimmingStyle.StatsOfSwimmingStyle);
         }
 
-        // create to get by id
-        [HttpGet("{StatsId}")]
-        public ActionResult<StatsSwimmingstyleDto> GetswimmingstyleById(int SwimmingStyleId, int StatsId)
+        [HttpGet("{StatsId}", Name = "GetSwimmingStyleById")]
+        public ActionResult<StatsSwimmingstyleDto> GetSwimmingStyleById(int SwimmingStyleId, int StatsId)
         {
             var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
                 .Find(x => x.SwimmingStyleId == SwimmingStyleId);
@@ -41,5 +41,63 @@ namespace SwimmingStyleAPI.Controllers
             }
             return Ok(statsSwimmingStyle);
         }
+
+        [HttpPost]
+        public ActionResult<StatsSwimmingstyleDto> CreateStatsSwimmingStyle(int SwimmingStyleId,
+            [FromBody] StatsSwimmingstyleDtoForCreation statsSwimmingStyle)
+        {
+            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
+                .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
+            if (swimmingStyle == null)
+            {
+                return NotFound();
+            }
+
+            // demo purposes - to be improved 
+            // need to calculate the ide of the new item 
+            var maxStatsId = SwimmingStyleDataStore.Current.SwimmingStyles.SelectMany(
+                               c => c.StatsOfSwimmingStyle).Max(p => p.IdStats);
+            // need to mapping because we work with swimming style dto and i need to create stats dto
+            var finalStatsSwimmingStyle = new StatsSwimmingstyleDto()
+            {
+                IdStats = ++maxStatsId,
+                Speed = statsSwimmingStyle.Speed,
+                Endurance = statsSwimmingStyle.Endurance,
+                Technique = statsSwimmingStyle.Technique,
+                Difficulty = statsSwimmingStyle.Difficulty
+            };
+
+            swimmingStyle.StatsOfSwimmingStyle.Add(finalStatsSwimmingStyle);
+            return CreatedAtRoute(
+                "GetSwimmingStyleById",
+                new
+                {
+                    SwimmingStyleId = SwimmingStyleId,
+                    StatsId = finalStatsSwimmingStyle.IdStats
+                },
+                finalStatsSwimmingStyle);
+            //nameof(GetswimmingstyleById)
+        }
+
+     /*   [HttpPost]
+        public ActionResult<SwimmingStyleDto> CreateSwimmingStyle([FromBody] SwimmingStyleForCreation swimmingStyle)
+        {
+            // demo purposes - to be improved 
+            var maxSwimmingStyleId = SwimmingStyleDataStore.Current.SwimmingStyles.Max(swimStyle => swimStyle.SwimmingStyleId);
+            // need to mapping because we work with swimming style dto and i need to create stats dto
+            var finalSwimmingStyle = new SwimmingStyleDto()
+            {
+                SwimmingStyleId = ++maxSwimmingStyleId,
+                Name = swimmingStyle.Name,
+                Image = swimmingStyle.Image,
+                Tags = swimmingStyle.Tags,
+                Description = swimmingStyle.Description
+            };
+            SwimmingStyleDataStore.Current.SwimmingStyles.Add(finalSwimmingStyle);
+            return CreatedAtRoute(
+                "GetSwimmingStyleById",
+                new { SwimmingStyleId = finalSwimmingStyle.SwimmingStyleId },
+                finalSwimmingStyle);
+        }*/
     }
 }

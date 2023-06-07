@@ -1,4 +1,6 @@
-﻿namespace SwimmingStyleAPI.Models
+﻿using SwimmingStyleAPI.Models.StatsDto;
+
+namespace SwimmingStyleAPI.Models.SwimmingStyleDto
 {
     public class SwimmingStyleDto
     {
