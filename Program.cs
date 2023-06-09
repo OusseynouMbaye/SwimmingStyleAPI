@@ -18,8 +18,8 @@ builder.Services
         //options.RespectBrowserAcceptHeader = true;  // accept les en-têtes d’acceptation du navigateur
         options.ReturnHttpNotAcceptable = true;
     })
+    .AddNewtonsoftJson()
     .AddXmlDataContractSerializerFormatters();
-//.AddNewtonsoftJson();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
