@@ -30,13 +30,8 @@ namespace SwimmingStyleAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<SwimmingStyleDto> CreateSwimmingStyle([FromBody] SwimmingStyleForCreation swimmingStyle)
+        public ActionResult<SwimmingStyleDto> CreateSwimmingStyle( SwimmingStyleForCreation swimmingStyle)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             // need to calculate the ide of the new item 
             var maxSwimmingStyleId = SwimmingStyleDataStore.Current.SwimmingStyles.Max(p => p.SwimmingStyleId);
             // need to mapping because we work with swimming style dto and i need to create swimming style dto
