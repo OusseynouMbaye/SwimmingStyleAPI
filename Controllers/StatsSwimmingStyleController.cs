@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Models.StatsDto;
 using SwimmingStyleAPI.Models.SwimmingStyleDto;
 using System.Net.NetworkInformation;
@@ -89,7 +90,95 @@ namespace SwimmingStyleAPI.Controllers
             //nameof(GetswimmingstyleById)
         }
 
+        [HttpPut("{StatsId}")]
+        public ActionResult<StatsSwimmingstyleDto> UpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
+                       [FromBody] StatsSwimmingstyleDtoForUpdate statsSwimmingStyle)
+        {
+            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
+                .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
+            if (swimmingStyle == null)
+            {
+                return NotFound();
+            }
+            // find swimming style
+            var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
+                .FirstOrDefault(x => x.IdStats == StatsId);
+            if (statsSwimmingStyleFromStore == null)
+            {
+                return NotFound();
+            }
+            // need to mapping 
+            statsSwimmingStyleFromStore.Speed = statsSwimmingStyle.Speed;
+            statsSwimmingStyleFromStore.Endurance = statsSwimmingStyle.Endurance;
+            statsSwimmingStyleFromStore.Technique = statsSwimmingStyle.Technique;
+            statsSwimmingStyleFromStore.Difficulty = statsSwimmingStyle.Difficulty;
+            return NoContent();
+        }
+
+        // patch
+        [HttpPatch("{StatsId}")]
+        public ActionResult<StatsSwimmingstyleDto> PartiallyUpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
+                                  JsonPatchDocument<StatsSwimmingstyleDtoForUpdate> patchDoc)
+        {
+            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
+                .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
+            if (swimmingStyle == null)
+            {
+                return NotFound();
+            }
+            // find swimming style
+            var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
+                .FirstOrDefault(x => x.IdStats == StatsId);
+            if (statsSwimmingStyleFromStore == null)
+            {
+                return NotFound();
+            }
+            // need to mapping 
+            var statsSwimmingStyleToPatch =
+                new StatsSwimmingstyleDtoForUpdate()
+                {
+                    Speed = statsSwimmingStyleFromStore.Speed,
+                    Endurance = statsSwimmingStyleFromStore.Endurance,
+                    Technique = statsSwimmingStyleFromStore.Technique,
+                    Difficulty = statsSwimmingStyleFromStore.Difficulty
+                };
+            patchDoc.ApplyTo(statsSwimmingStyleToPatch, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!TryValidateModel(statsSwimmingStyleToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+            // need to mapping 
+            statsSwimmingStyleFromStore.Speed = statsSwimmingStyleToPatch.Speed;
+            statsSwimmingStyleFromStore.Endurance = statsSwimmingStyleToPatch.Endurance;
+            statsSwimmingStyleFromStore.Technique = statsSwimmingStyleToPatch.Technique;
+            statsSwimmingStyleFromStore.Difficulty = statsSwimmingStyleToPatch.Difficulty;
+            return NoContent();
+        }
 
 
+        [HttpDelete("{StatsId}")]
+        public ActionResult DeleteStatsSwimmingStyle(int SwimmingStyleId, int StatsId)
+        {
+            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
+                .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
+            if (swimmingStyle == null)
+            {
+                return NotFound();
+            }
+            // find swimming style
+            var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
+                .FirstOrDefault(x => x.IdStats == StatsId);
+            if (statsSwimmingStyleFromStore == null)
+            {
+                return NotFound();
+            }
+            swimmingStyle.StatsOfSwimmingStyle.Remove(statsSwimmingStyleFromStore);
+            return NoContent();
+        }
     }
 }
