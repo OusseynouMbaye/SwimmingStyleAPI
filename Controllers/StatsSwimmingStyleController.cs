@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Models.StatsDto;
-using SwimmingStyleAPI.Models.SwimmingStyleDto;
-using System.Net.NetworkInformation;
 
 namespace SwimmingStyleAPI.Controllers
 {
@@ -10,18 +8,36 @@ namespace SwimmingStyleAPI.Controllers
     [ApiController]
     public class StatsSwimmingStyleController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<StatsSwimmingstyleDto>> GetStatsOfSwimmingStyle(int SwimmingStyleId)
+        // logger
+        private readonly ILogger<StatsSwimmingStyleController> _logger;
+
+        public StatsSwimmingStyleController(ILogger<StatsSwimmingStyleController> logger)
         {
-            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                .FirstOrDefault(x => x.SwimmingStyleId == SwimmingStyleId);
-            if (swimmingStyle == null)
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<StatsSwimmingstyleDto>> GetAllStatsOfSwimmingStyle(int SwimmingStyleId)
+        {
+            try
             {
-                return NotFound();
+                throw new Exception("Exception sample");
+                var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
+                             .FirstOrDefault(x => x.SwimmingStyleId == SwimmingStyleId);
+                if (swimmingStyle == null)
+                {
+                    _logger.LogInformation($"Swimming style with id {SwimmingStyleId} was found");
+                    return NotFound();
+                }
+                return Ok(swimmingStyle.StatsOfSwimmingStyle);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception while getting swimming style with id {SwimmingStyleId}",ex);
+                return StatusCode(500, "A problem happened while handling your request");
             }
 
-
-            return Ok(swimmingStyle.StatsOfSwimmingStyle);
         }
 
         [HttpGet("{StatsId}", Name = "GetSwimmingStyleById")]
@@ -31,14 +47,17 @@ namespace SwimmingStyleAPI.Controllers
                 .Find(x => x.SwimmingStyleId == SwimmingStyleId);
             if (swimmingStyle == null)
             {
+                _logger.LogWarning($"Swimming style with id {SwimmingStyleId} was found");
                 return NotFound();
             }
+
 
             // find swimming style
             var statsSwimmingStyle = swimmingStyle.StatsOfSwimmingStyle
                 .FirstOrDefault(x => x.IdStats == StatsId);
             if (statsSwimmingStyle == null)
             {
+                _logger.LogInformation($"stats style with id {StatsId} was found");
                 return NotFound();
             }
             return Ok(statsSwimmingStyle);
@@ -100,6 +119,7 @@ namespace SwimmingStyleAPI.Controllers
             {
                 return NotFound();
             }
+
             // find swimming style
             var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
                 .FirstOrDefault(x => x.IdStats == StatsId);
@@ -107,6 +127,7 @@ namespace SwimmingStyleAPI.Controllers
             {
                 return NotFound();
             }
+
             // need to mapping 
             statsSwimmingStyleFromStore.Speed = statsSwimmingStyle.Speed;
             statsSwimmingStyleFromStore.Endurance = statsSwimmingStyle.Endurance;
@@ -115,7 +136,7 @@ namespace SwimmingStyleAPI.Controllers
             return NoContent();
         }
 
-        // patch
+        // patch request for update only one property or more with json patch document
         [HttpPatch("{StatsId}")]
         public ActionResult<StatsSwimmingstyleDto> PartiallyUpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
                                   JsonPatchDocument<StatsSwimmingstyleDtoForUpdate> patchDoc)
@@ -142,7 +163,9 @@ namespace SwimmingStyleAPI.Controllers
                     Technique = statsSwimmingStyleFromStore.Technique,
                     Difficulty = statsSwimmingStyleFromStore.Difficulty
                 };
+
             patchDoc.ApplyTo(statsSwimmingStyleToPatch, ModelState);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -152,6 +175,7 @@ namespace SwimmingStyleAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
+
             // need to mapping 
             statsSwimmingStyleFromStore.Speed = statsSwimmingStyleToPatch.Speed;
             statsSwimmingStyleFromStore.Endurance = statsSwimmingStyleToPatch.Endurance;
