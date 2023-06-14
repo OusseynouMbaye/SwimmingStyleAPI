@@ -1,3 +1,4 @@
+using Serilog;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -5,7 +6,21 @@ using SwimmingStyleAPI.Extensions;
 using SwimmingStyleAPI.Validation;
 using SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation;
 
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .WriteTo.File("logs/swimmingstyle.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+/*builder.Logging.ClearProviders();
+builder.Logging.AddConsole();*/
+
+builder.Host.UseSerilog();
+
+
 
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
