@@ -3,9 +3,9 @@ using SwimmingStyleAPI.Models.StatsDto;
 
 namespace SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation
 {
-    public class StatsSwimmingStyleValidator : AbstractValidator<StatsSwimmingstyleDtoForCreation>
+    public class StatsSwimmingStyleForCreationValidator : AbstractValidator<StatsSwimmingstyleDtoForCreation>
     {
-        public StatsSwimmingStyleValidator()
+        public StatsSwimmingStyleForCreationValidator()
         {
             RuleFor(statsSwimmingStyle => statsSwimmingStyle.Speed)
                 .NotNull()
