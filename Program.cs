@@ -43,9 +43,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SwimmingStyleContext>(dbContextOptions =>
 {
-    dbContextOptions.UseSqlite("Data Source=SwimmingStyleDb.db");
-    //  builder.Configuration.GetConnectionString("SwimmingStyleConnectionString")
+    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:SwimmingStyleDbConnectionString"]);
+    //dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("SwimmingStyleConnectionString"));
 });
+//  builder.Configuration.GetConnectionString("SwimmingStyleConnectionString")
 
 builder.Services
     .AddFluentValidationAutoValidation()
