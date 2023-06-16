@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwimmingStyleAPI.DbContexts;
 
@@ -10,9 +11,11 @@ using SwimmingStyleAPI.DbContexts;
 namespace SwimmingStyleAPI.Migrations
 {
     [DbContext(typeof(SwimmingStyleContext))]
-    partial class SwimmingStyleContextModelSnapshot : ModelSnapshot
+    [Migration("20230616150721_swimmingstyleDb_addStatSwimming_techniqueDifficulte")]
+    partial class swimmingstyleDb_addStatSwimming_techniqueDifficulte
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
@@ -43,44 +46,6 @@ namespace SwimmingStyleAPI.Migrations
                     b.HasIndex("SwimmingStyleEntitiesId");
 
                     b.ToTable("StatsSwimmingStyles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Difficulty = 2,
-                            Endurance = 2,
-                            Speed = 2,
-                            SwimmingStyleEntitiesId = 1,
-                            Technique = 2
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Difficulty = 3,
-                            Endurance = 3,
-                            Speed = 3,
-                            SwimmingStyleEntitiesId = 1,
-                            Technique = 4
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Difficulty = 4,
-                            Endurance = 4,
-                            Speed = 4,
-                            SwimmingStyleEntitiesId = 2,
-                            Technique = 4
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Difficulty = 5,
-                            Endurance = 5,
-                            Speed = 5,
-                            SwimmingStyleEntitiesId = 2,
-                            Technique = 5
-                        });
                 });
 
             modelBuilder.Entity("SwimmingStyleAPI.Entitites.SwimmingStyleEntities", b =>
@@ -102,21 +67,6 @@ namespace SwimmingStyleAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SwimmingStyles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "The front crawl or forward crawl, also known as the Australi",
-                            Image = "freeStyle",
-                            Name = "Crawl"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Image = "Butterfly",
-                            Name = "Butterfly"
-                        });
                 });
 
             modelBuilder.Entity("SwimmingStyleAPI.Entitites.StatsSwimmingstyleEntities", b =>
