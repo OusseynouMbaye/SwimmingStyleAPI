@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwimmingStyleAPI.DbContexts;
 
@@ -10,9 +11,11 @@ using SwimmingStyleAPI.DbContexts;
 namespace SwimmingStyleAPI.Migrations
 {
     [DbContext(typeof(SwimmingStyleContext))]
-    partial class SwimmingStyleContextModelSnapshot : ModelSnapshot
+    [Migration("20230616153022_DataSeed")]
+    partial class DataSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.7");
