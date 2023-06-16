@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<SwimmingStyleContext>(dbContextOptions =>
 {
     dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:SwimmingStyleDbConnectionString"]);
-    //dbContextOptions.UseNpgsql(builder.Configuration.GetConnectionString("SwimmingStyleConnectionString"));
+    //dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("SwimmingStyleConnectionString"));
 });
 //  builder.Configuration.GetConnectionString("SwimmingStyleConnectionString")
 
