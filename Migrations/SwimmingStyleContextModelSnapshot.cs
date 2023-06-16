@@ -42,7 +42,7 @@ namespace SwimmingStyleAPI.Migrations
 
                     b.HasIndex("SwimmingStyleEntitiesId");
 
-                    b.ToTable("StatsSwimmingStyles");
+                    b.ToTable("StatsSwimmingStyles", (string)null);
 
                     b.HasData(
                         new
@@ -101,7 +101,7 @@ namespace SwimmingStyleAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SwimmingStyles");
+                    b.ToTable("SwimmingStyles", (string)null);
 
                     b.HasData(
                         new
