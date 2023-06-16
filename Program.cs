@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using SwimmingStyleAPI.Extensions;
 using SwimmingStyleAPI.Validation;
 using SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation;
-
+using SwimmingStyleAPI.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -40,11 +41,17 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<SwimmingStyleContext>(dbContextOptions =>
+{
+    dbContextOptions.UseSqlite("Data Source=SwimmingStyleDb.db");
+    //  builder.Configuration.GetConnectionString("SwimmingStyleConnectionString")
+});
+
 builder.Services
     .AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters()
     .AddValidatorsFromAssemblyContaining<SwimmingStyleForCreationValidator>()
-    .AddValidatorsFromAssemblyContaining<StatsSwimmingStyleValidator>();
+    .AddValidatorsFromAssemblyContaining<StatsSwimmingStyleForCreationValidator>();
 
 var app = builder.Build();
 
