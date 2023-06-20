@@ -7,6 +7,7 @@ using SwimmingStyleAPI.Validation;
 using SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation;
 using SwimmingStyleAPI.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using SwimmingStyleAPI.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -43,8 +44,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SwimmingStyleContext>(dbContextOptions =>
 {
-    //dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:SwimmingStyleDbConnectionString"]);
-    dbContextOptions.UseNpgsql(builder.Configuration.GetConnectionString("SwimmingStyleConnectionString"));
+    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:SwimmingStyleDbConnectionString"]);
+    //dbContextOptions.UseNpgsql(builder.Configuration.GetConnectionString("SwimmingStyleConnectionString"));
 });
 //  builder.Configuration.GetConnectionString("SwimmingStyleConnectionString")
 
@@ -53,6 +54,8 @@ builder.Services
     .AddFluentValidationClientsideAdapters()
     .AddValidatorsFromAssemblyContaining<SwimmingStyleForCreationValidator>()
     .AddValidatorsFromAssemblyContaining<StatsSwimmingStyleForCreationValidator>();
+
+builder.Services.AddScoped<ISwimmingStyleRepository, SwimmingStyleRepository>();
 
 var app = builder.Build();
 
