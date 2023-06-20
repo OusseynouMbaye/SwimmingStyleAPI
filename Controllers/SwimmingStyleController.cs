@@ -29,16 +29,22 @@ namespace SwimmingStyleAPI.Controllers
 
         // create to get by id
         [HttpGet("{SwimmingStyleId}")]
-        public async Task<ActionResult<SwimmingStyleDto>> GetSwimmingStyleById(int swimmingStyleId)
+        public async Task<IActionResult> GetSwimmingStyleById(int swimmingStyleId, bool includeStatsOfSwimStyle = false)
         {
-            //var swimmingStyleToReturn = await _swimmingStyleRepository.GetSwimmingStyleById(swimmingStyleId, true);
-            //if (swimmingStyleToReturn == null)
-            //{
-            //    return NotFound();
-            //}
+            var swimmingStyle = await _swimmingStyleRepository.GetSwimmingStyleById(swimmingStyleId, true);
+            if (swimmingStyle == null)
+            {
+                return NotFound();
+            }
 
-            //return Ok(swimmingStyleToReturn);
-            return Ok();
+            if (includeStatsOfSwimStyle)
+            {
+                return Ok(_mapper.Map<SwimmingStyleDto>(swimmingStyle));
+            }
+
+            return Ok(_mapper.Map<SwimmingStyleWithoutStatsOfSwimmingStyleDto>(swimmingStyle));
+            
+
         }
 
         /*   [HttpPost]

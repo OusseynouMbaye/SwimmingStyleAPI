@@ -7,7 +7,7 @@ namespace SwimmingStyleAPI.Profiles
         public SwimmingStyleProfile()
         {
             CreateMap<Entitites.SwimmingStyleEntities, Models.SwimmingStyleDto.SwimmingStyleWithoutStatsOfSwimmingStyleDto>();
-            //CreateMap<Models.SwimmingStyleDto.SwimmingStyleWithoutStatsOfSwimmingStyleDto, Entitites.SwimmingStyleEntities>();
+            CreateMap<Entitites.SwimmingStyleEntities, Models.SwimmingStyleDto.SwimmingStyleDto>();
         }
     }
 }
