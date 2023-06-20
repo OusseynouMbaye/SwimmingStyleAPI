@@ -30,13 +30,16 @@ namespace SwimmingStyleAPI.DbContexts
                 {
                     Id = 1,
                     Image = "freeStyle",
-                    //Tags = tagsFree,
+                    //Tags = ["free", "crawl"],
                     Description = "The front crawl or forward crawl, also known as the Australi",
                 },
                 new SwimmingStyleEntities("Butterfly")
                 {
                     Id = 2,
-                    Image = "Butterfly"
+                    Image = "Butterfly",
+                    Description = "The butterfly (colloquially shortened to fly) is a swimming stroke swum on the chest, with both arms moving symmetrically, accompanied by the butterfly kick (also known as the dolphin kick).",
+                    //Tags = ["fly", "butterfly"],
+                    
                 });
 
             modelBuilder.Entity<StatsSwimmingstyleEntities>().HasData(

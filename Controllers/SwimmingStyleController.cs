@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Models.SwimmingStyleDto;
 using SwimmingStyleAPI.Services;
 
@@ -10,10 +11,12 @@ namespace SwimmingStyleAPI.Controllers
     {
         // repository
         private readonly ISwimmingStyleRepository _swimmingStyleRepository;
+        private readonly IMapper _mapper;
 
-        public SwimmingStyleController(ISwimmingStyleRepository swimmingStyleRepository)
+        public SwimmingStyleController(ISwimmingStyleRepository swimmingStyleRepository, IMapper mapper )
         {
             _swimmingStyleRepository = swimmingStyleRepository ?? throw new ArgumentNullException(nameof(swimmingStyleRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
@@ -21,27 +24,14 @@ namespace SwimmingStyleAPI.Controllers
         {
             var swimmingStyleEntities = await _swimmingStyleRepository.GetAllSwimmingStylesAsync();
 
-            var result = new List<SwimmingStyleWithoutStatsOfSwimmingStyleDto>();
-            foreach (var swimmingStyleEntitie in swimmingStyleEntities)
-            {
-                result.Add(new SwimmingStyleWithoutStatsOfSwimmingStyleDto
-                {
-                    SwimmingStyleId = swimmingStyleEntitie.Id,
-                    Name = swimmingStyleEntitie.Name,
-                    Description = swimmingStyleEntitie.Description,
-
-
-                });
-            }
-
-            return Ok(result);
+            return Ok(_mapper.Map<IEnumerable<SwimmingStyleWithoutStatsOfSwimmingStyleDto>>(swimmingStyleEntities));
         }
 
         // create to get by id
         [HttpGet("{SwimmingStyleId}")]
-        public async Task<ActionResult<SwimmingStyleDto>> GetSwimmingStyleById(int SwimmingStyleId)
+        public async Task<ActionResult<SwimmingStyleDto>> GetSwimmingStyleById(int swimmingStyleId)
         {
-            //var swimmingStyleToReturn = await _swimmingStyleRepository.GetSwimmingStyleById();
+            //var swimmingStyleToReturn = await _swimmingStyleRepository.GetSwimmingStyleById(swimmingStyleId, true);
             //if (swimmingStyleToReturn == null)
             //{
             //    return NotFound();
