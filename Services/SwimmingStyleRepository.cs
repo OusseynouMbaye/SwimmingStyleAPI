@@ -35,12 +35,17 @@ namespace SwimmingStyleAPI.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<StatsSwimmingstyleEntities>> GetAllStatsOfSwimmingStyle(int SwimmingStyleId)
+        public async Task<bool> SwimmingStyleExistAsync(int swimmingStyleId)
         {
-           return await _swimmingStyleContext.StatsSwimmingStyles.OrderBy(stats => stats.SwimmingStyleEntitiesId == SwimmingStyleId).ToListAsync();
+            return await _swimmingStyleContext.SwimmingStyles.AnyAsync(swimmingStyle => swimmingStyle.Id == swimmingStyleId);
         }
 
-        public async Task<StatsSwimmingstyleEntities?> GetStatsOfSwimmingStyleById(int swimmingStyleId, int statsId)
+        public async Task<IEnumerable<StatsSwimmingstyleEntities>> GetStatsOfSwimmingStyleAsync(int SwimmingStyleId)
+        {
+           return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == SwimmingStyleId).ToListAsync();
+        }
+
+        public async Task<StatsSwimmingstyleEntities?> GetStatOfSwimmingStyleAsync(int swimmingStyleId, int statsId)
         {
            return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == swimmingStyleId && stats.Id == statsId).FirstOrDefaultAsync(); 
         }

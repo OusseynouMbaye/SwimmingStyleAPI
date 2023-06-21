@@ -21,7 +21,7 @@ namespace SwimmingStyleAPI
             {
                 new SwimmingStyleDto()
                 {
-                    SwimmingStyleId = 1,
+                    Id = 1,
                     Name = "Name",
                     Image = "freeStyle",
                     Tags= tagsFree,
@@ -50,7 +50,7 @@ namespace SwimmingStyleAPI
                 },
                 new SwimmingStyleDto()
                 {
-                    SwimmingStyleId = 2,
+                    Id = 2,
                     Name = "Butterfly",
                     Image = "Butterfly",
                     Tags = tagsFly,

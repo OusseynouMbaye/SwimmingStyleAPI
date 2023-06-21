@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Models.StatsDto;
 using SwimmingStyleAPI.Services;
@@ -11,62 +12,48 @@ namespace SwimmingStyleAPI.Controllers
     {
         // logger
         private readonly ILogger<StatsSwimmingStyleController> _logger;
-
         private readonly ISwimmingStyleRepository _swimmingStyleRepository;
+        private readonly IMapper _mapper;
 
-        public StatsSwimmingStyleController( ISwimmingStyleRepository swimmingStyleRepository ,ILogger<StatsSwimmingStyleController> logger)
+        public StatsSwimmingStyleController(ISwimmingStyleRepository swimmingStyleRepository, ILogger<StatsSwimmingStyleController> logger, IMapper mapper)
         {
             _swimmingStyleRepository = swimmingStyleRepository ?? throw new ArgumentNullException(nameof(swimmingStyleRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StatsSwimmingstyleDto>> GetAllStatsOfSwimmingStyle(int SwimmingStyleId)
+        public async Task<ActionResult<IEnumerable<StatsSwimmingstyleDto>>> GetStatsOfSwimmingStyle(int SwimmingStyleId)
         {
-            try
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
             {
-                //throw new Exception("Exception sample");
-             /*   var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                             .FirstOrDefault(x => x.SwimmingStyleId == SwimmingStyleId);*/
-
-                var swimmingStyle = _swimmingStyleRepository.GetAllSwimmingStylesAsync();
-                if (swimmingStyle == null)
-                {
-                    _logger.LogInformation($"Swimming style with id {SwimmingStyleId} was found");
-                    return NotFound();
-                }
-                return Ok(swimmingStyle.Id);
-
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
+                return NotFound();
             }
-            catch (Exception ex)
-            {
-                _logger.LogCritical($"Exception while getting swimming style with id {SwimmingStyleId}", ex);
-                return StatusCode(500, "A problem happened while handling your request");
-            }
+
+            var statsOfswimmingStyle = await _swimmingStyleRepository.GetStatsOfSwimmingStyleAsync(SwimmingStyleId);
+            return Ok(_mapper.Map<IEnumerable<StatsSwimmingstyleDto>>(statsOfswimmingStyle));
 
         }
 
-        [HttpGet("{StatsId}", Name = "GetSwimmingStyleById")]
-        public ActionResult<StatsSwimmingstyleDto> GetSwimmingStyleById(int SwimmingStyleId, int StatsId)
+        [HttpGet("{StatsId}", Name = "GetStatOfSwimmingStyle")]
+        public async Task<ActionResult<StatsSwimmingstyleDto>> GetStatOfSwimmingStyle(int SwimmingStyleId, int StatsId)
         {
-            var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                .Find(x => x.SwimmingStyleId == SwimmingStyleId);
-            if (swimmingStyle == null)
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
             {
-                _logger.LogWarning($"Swimming style with id {SwimmingStyleId} was found");
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
                 return NotFound();
             }
 
-
-            // find swimming style
-            var statsSwimmingStyle = swimmingStyle.StatsOfSwimmingStyle
-                .FirstOrDefault(x => x.IdStats == StatsId);
-            if (statsSwimmingStyle == null)
+            var statsOfswimmingStyle = await _swimmingStyleRepository.GetStatOfSwimmingStyleAsync(SwimmingStyleId, StatsId);
+            if (statsOfswimmingStyle == null)
             {
-                _logger.LogInformation($"stats style with id {StatsId} was found");
                 return NotFound();
             }
-            return Ok(statsSwimmingStyle);
+
+            return Ok(_mapper.Map<StatsSwimmingstyleDto>(statsOfswimmingStyle));
+
+
         }
 
         /*      [HttpPost]

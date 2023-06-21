@@ -8,10 +8,11 @@ namespace SwimmingStyleAPI.Services
         Task<IEnumerable<SwimmingStyleEntities>> GetAllSwimmingStylesAsync();
         Task<SwimmingStyleEntities?> GetSwimmingStyleById(int swimmingStyleId, bool includeStatSwimmingStyle);
         void CreateSwimmingStyle(SwimmingStyleEntities swimmingStyle);
+        Task<bool> SwimmingStyleExistAsync(int swimmingStyleId);
         /*  void UpdateSwimmingStyle(SwimmingStyleEntities swimmingStyle);
           void DeleteSwimmingStyle(SwimmingStyleEntities swimmingStyle);*/
 
-        Task<IEnumerable<StatsSwimmingstyleEntities>> GetAllStatsOfSwimmingStyle(int SwimmingStyleId);
-        Task<StatsSwimmingstyleEntities?> GetStatsOfSwimmingStyleById(int SwimmingStyleId, int statsId);
+        Task<IEnumerable<StatsSwimmingstyleEntities>> GetStatsOfSwimmingStyleAsync(int SwimmingStyleId);
+        Task<StatsSwimmingstyleEntities?> GetStatOfSwimmingStyleAsync(int SwimmingStyleId, int statsId);
     }
 }
