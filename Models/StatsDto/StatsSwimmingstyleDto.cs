@@ -3,7 +3,7 @@
     public class StatsSwimmingstyleDto
     {
 
-        public int IdStats { get; set; }
+        public int Id { get; set; }
         public int Speed { get; set; } 
         public int? Endurance { get; set; }
         public int? Technique { get; set; }

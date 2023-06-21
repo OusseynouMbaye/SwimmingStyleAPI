@@ -31,7 +31,7 @@ namespace SwimmingStyleAPI
                     {
                         new StatsSwimmingstyleDto()
                         {
-                            IdStats = 1,
+                            Id = 1,
                             Speed = 4,
                             Endurance = 4,
                             Technique = 2,
@@ -39,7 +39,7 @@ namespace SwimmingStyleAPI
                         },
                         new StatsSwimmingstyleDto()
                         {
-                            IdStats = 2,
+                            Id = 2,
                             Speed = 5,
                             Endurance = 5,
                             Technique = 5,
@@ -60,7 +60,7 @@ namespace SwimmingStyleAPI
                     {
                         new StatsSwimmingstyleDto()
                         {
-                            IdStats = 1,
+                            Id = 1,
                             Speed = 5,
                             Endurance = 5,
                             Technique = 5,
@@ -68,7 +68,7 @@ namespace SwimmingStyleAPI
                         },
                         new StatsSwimmingstyleDto()
                         {
-                            IdStats = 2,
+                            Id = 2,
                             Speed = 2,
                             Technique = 3,
                             Endurance = 3,
