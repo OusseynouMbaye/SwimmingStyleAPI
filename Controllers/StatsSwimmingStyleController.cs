@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using SwimmingStyleAPI.Entitites;
 using SwimmingStyleAPI.Models.StatsDto;
 using SwimmingStyleAPI.Services;
 
@@ -54,6 +55,30 @@ namespace SwimmingStyleAPI.Controllers
             return Ok(_mapper.Map<StatsSwimmingstyleDto>(statsOfswimmingStyle));
 
 
+        }
+        [HttpPost]
+        public async Task<ActionResult<StatsSwimmingstyleDto>> CreateStatsSwimmingStyle(int SwimmingStyleId,
+                       [FromBody] StatsSwimmingstyleForCreationDto statsSwimmingStyle)
+        {
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
+            {
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
+                return NotFound();
+            }
+
+            var finalStatSwimmingStyle = _mapper.Map<StatsSwimmingstyleEntities>(statsSwimmingStyle);
+
+            await _swimmingStyleRepository.AddStatsForSwimmingStyleAsync(SwimmingStyleId, finalStatSwimmingStyle);
+
+            await _swimmingStyleRepository.SaveChangesAsync();
+
+            var createdStatsSwimmingStyleToReturn = _mapper.Map<StatsSwimmingstyleDto>(finalStatSwimmingStyle);
+
+            return CreatedAtRoute("GetStatOfSwimmingStyle", new
+            {
+                SwimmingStyleId = SwimmingStyleId,
+                StatsId = createdStatsSwimmingStyleToReturn.Id
+            }, createdStatsSwimmingStyleToReturn);
         }
 
         /*      [HttpPost]

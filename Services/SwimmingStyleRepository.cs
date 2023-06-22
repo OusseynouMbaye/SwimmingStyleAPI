@@ -18,7 +18,7 @@ namespace SwimmingStyleAPI.Services
             return await _swimmingStyleContext.SwimmingStyles.OrderBy(swimmingStyle => swimmingStyle.Id).ToListAsync();
         }
 
-        public async Task<SwimmingStyleEntities?> GetSwimmingStyleById(int swimmingStyleId, bool includeStatSwimmingStyle)
+        public async Task<SwimmingStyleEntities?> GetSwimmingStyleByIdAsync(int swimmingStyleId, bool includeStatSwimmingStyle)
         {
             if (includeStatSwimmingStyle)
             {
@@ -42,13 +42,27 @@ namespace SwimmingStyleAPI.Services
 
         public async Task<IEnumerable<StatsSwimmingstyleEntities>> GetStatsOfSwimmingStyleAsync(int SwimmingStyleId)
         {
-           return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == SwimmingStyleId).ToListAsync();
+            return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == SwimmingStyleId).ToListAsync();
         }
 
         public async Task<StatsSwimmingstyleEntities?> GetStatOfSwimmingStyleAsync(int swimmingStyleId, int statsId)
         {
-           return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == swimmingStyleId && stats.Id == statsId).FirstOrDefaultAsync(); 
+            return await _swimmingStyleContext.StatsSwimmingStyles.Where(stats => stats.SwimmingStyleEntitiesId == swimmingStyleId && stats.Id == statsId).FirstOrDefaultAsync();
         }
 
+        public async Task AddStatsForSwimmingStyleAsync(int swimmingStyleId, StatsSwimmingstyleEntities statsSwimmingstyleEntities)
+        {
+            var swimmingStyle = await GetSwimmingStyleByIdAsync(swimmingStyleId, false);
+            if (swimmingStyle != null)
+            {
+                swimmingStyle.StatsOfSwimmingStyle.Add(statsSwimmingstyleEntities);
+            }
+
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _swimmingStyleContext.SaveChangesAsync() >= 0;
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace SwimmingStyleAPI.Controllers
         [HttpGet("{SwimmingStyleId}")]
         public async Task<IActionResult> GetSwimmingStyleById(int swimmingStyleId, bool includeStatsOfSwimStyle = false)
         {
-            var swimmingStyle = await _swimmingStyleRepository.GetSwimmingStyleById(swimmingStyleId, true);
+            var swimmingStyle = await _swimmingStyleRepository.GetSwimmingStyleByIdAsync(swimmingStyleId, true);
             if (swimmingStyle == null)
             {
                 return NotFound();

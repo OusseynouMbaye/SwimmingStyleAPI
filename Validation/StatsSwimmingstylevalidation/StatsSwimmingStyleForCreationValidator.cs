@@ -3,7 +3,7 @@ using SwimmingStyleAPI.Models.StatsDto;
 
 namespace SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation
 {
-    public class StatsSwimmingStyleForCreationValidator : AbstractValidator<StatsSwimmingstyleDtoForCreation>
+    public class StatsSwimmingStyleForCreationValidator : AbstractValidator<StatsSwimmingstyleForCreationDto>
     {
         public StatsSwimmingStyleForCreationValidator()
         {
