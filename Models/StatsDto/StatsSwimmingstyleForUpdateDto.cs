@@ -1,6 +1,6 @@
 ﻿namespace SwimmingStyleAPI.Models.StatsDto
 {
-    public class StatsSwimmingstyleDtoForUpdate
+    public class StatsSwimmingstyleForUpdateDto
     {
         public int Speed { get; set; }
         public int? Endurance { get; set; }

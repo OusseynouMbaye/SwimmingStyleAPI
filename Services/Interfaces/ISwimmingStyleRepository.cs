@@ -16,5 +16,6 @@ namespace SwimmingStyleAPI.Services.Interfaces
 
         Task<IEnumerable<StatsSwimmingstyleEntities>> GetStatsOfSwimmingStyleAsync(int SwimmingStyleId);
         Task<StatsSwimmingstyleEntities?> GetStatOfSwimmingStyleAsync(int SwimmingStyleId, int statsId);
+        void DeleteStatSwimmingStyle(StatsSwimmingstyleEntities statsSwimmingstyleEntities);
     }
 }

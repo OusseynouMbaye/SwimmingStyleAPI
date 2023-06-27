@@ -65,5 +65,11 @@ namespace SwimmingStyleAPI.Services.Implementation
         {
             return await _swimmingStyleContext.SaveChangesAsync() >= 0;
         }
+
+        // delete
+        public void DeleteStatSwimmingStyle(StatsSwimmingstyleEntities statsSwimmingstyleEntities)
+        {
+            _swimmingStyleContext.StatsSwimmingStyles.Remove(statsSwimmingstyleEntities);
+        }
     }
 }

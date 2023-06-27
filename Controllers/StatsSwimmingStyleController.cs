@@ -81,147 +81,75 @@ namespace SwimmingStyleAPI.Controllers
             }, createdStatsSwimmingStyleToReturn);
         }
 
-        /*      [HttpPost]
-              public ActionResult<StatsSwimmingstyleDto> CreateStatsSwimmingStyle(int SwimmingStyleId,
-                  [FromBody] StatsSwimmingstyleDtoForCreation statsSwimmingStyle)
-              {
-                  var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                      .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
-                  if (swimmingStyle == null)
-                  {
-                      return NotFound();
-                  }
+        [HttpPut("{StatsId}")]
+        public async Task<IActionResult> UpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
+                                  [FromBody] StatsSwimmingstyleForUpdateDto statsSwimmingStyle)
+        {
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
+            {
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
+                return NotFound();
+            }
+            var statsSwimmingStyleFromEntity = await _swimmingStyleRepository.GetStatOfSwimmingStyleAsync(SwimmingStyleId, StatsId);
+            if (statsSwimmingStyleFromEntity == null)
+            {
+                return NotFound();
+            }
 
-                  // need to calculate the ide of the new item 
-                  var maxStatsId = SwimmingStyleDataStore.Current.SwimmingStyles.SelectMany(
-                                     c => c.StatsOfSwimmingStyle).Max(p => p.IdStats);
-                  if (maxStatsId == 0)
-                  {
-                      maxStatsId = 1;
-                  }
-                  else
-                  {
-                      maxStatsId++;
-                  }
+            _mapper.Map(statsSwimmingStyle, statsSwimmingStyleFromEntity);
 
-                  // need to mapping because we work with swimming style dto and i need to create stats dto
-                  var finalStatsSwimmingStyle = new StatsSwimmingstyleDto()
-                  {
+            await _swimmingStyleRepository.SaveChangesAsync();
+            return NoContent();
+        }
 
-                      IdStats = maxStatsId,
-                      Speed = statsSwimmingStyle.Speed,
-                      Endurance = statsSwimmingStyle.Endurance,
-                      Technique = statsSwimmingStyle.Technique,
-                      Difficulty = statsSwimmingStyle.Difficulty
-                  };
+        [HttpPatch("{StatsId}")]
+        public async Task<IActionResult> PartiallyUpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
+                                             [FromBody] JsonPatchDocument<StatsSwimmingstyleForUpdateDto> patchDoc)
+        {
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
+            {
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
+                return NotFound();
+            }
+            var statsSwimmingStyleFromEntity = await _swimmingStyleRepository.GetStatOfSwimmingStyleAsync(SwimmingStyleId, StatsId);
+            if (statsSwimmingStyleFromEntity == null)
+            {
+                return NotFound();
+            }
+            var statsSwimmingStyleToPatch = _mapper.Map<StatsSwimmingstyleForUpdateDto>(statsSwimmingStyleFromEntity);
 
-                  swimmingStyle.StatsOfSwimmingStyle.Add(finalStatsSwimmingStyle);
-                  return CreatedAtRoute(
-                      "GetSwimmingStyleById",
-                      new
-                      {
-                          SwimmingStyleId = SwimmingStyleId,
-                          StatsId = finalStatsSwimmingStyle.IdStats
-                      },
-                      finalStatsSwimmingStyle);
-                  //nameof(GetswimmingstyleById)
-              }
+            patchDoc.ApplyTo(statsSwimmingStyleToPatch, ModelState);
 
-              [HttpPut("{StatsId}")]
-              public ActionResult<StatsSwimmingstyleDto> UpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
-                             [FromBody] StatsSwimmingstyleDtoForUpdate statsSwimmingStyle)
-              {
-                  var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                      .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
-                  if (swimmingStyle == null)
-                  {
-                      return NotFound();
-                  }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!TryValidateModel(statsSwimmingStyleToPatch))
+            {
+                return BadRequest(ModelState);
+            }
+            _mapper.Map(statsSwimmingStyleToPatch, statsSwimmingStyleFromEntity);
+            await _swimmingStyleRepository.SaveChangesAsync();
+            return NoContent();
+        }
 
-                  // find swimming style
-                  var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
-                      .FirstOrDefault(x => x.IdStats == StatsId);
-                  if (statsSwimmingStyleFromStore == null)
-                  {
-                      return NotFound();
-                  }
+        [HttpDelete("{StatsId}")]
+        public async Task<IActionResult> DeleteStatsSwimmingStyle(int SwimmingStyleId, int StatsId)
+        {
+            if (!await _swimmingStyleRepository.SwimmingStyleExistAsync(SwimmingStyleId))
+            {
+                _logger.LogInformation($"Swimming style with id {SwimmingStyleId} wasn't found when accessing of Stats of swimming style ");
+                return NotFound();
+            }
 
-                  // need to mapping 
-                  statsSwimmingStyleFromStore.Speed = statsSwimmingStyle.Speed;
-                  statsSwimmingStyleFromStore.Endurance = statsSwimmingStyle.Endurance;
-                  statsSwimmingStyleFromStore.Technique = statsSwimmingStyle.Technique;
-                  statsSwimmingStyleFromStore.Difficulty = statsSwimmingStyle.Difficulty;
-                  return NoContent();
-              }
-
-              // patch request for update only one property or more with json patch document
-              [HttpPatch("{StatsId}")]
-              public ActionResult<StatsSwimmingstyleDto> PartiallyUpdateStatsSwimmingStyle(int SwimmingStyleId, int StatsId,
-                                        JsonPatchDocument<StatsSwimmingstyleDtoForUpdate> patchDoc)
-              {
-                  var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                      .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
-                  if (swimmingStyle == null)
-                  {
-                      return NotFound();
-                  }
-                  // find swimming style
-                  var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
-                      .FirstOrDefault(x => x.IdStats == StatsId);
-                  if (statsSwimmingStyleFromStore == null)
-                  {
-                      return NotFound();
-                  }
-                  // need to mapping 
-                  var statsSwimmingStyleToPatch =
-                      new StatsSwimmingstyleDtoForUpdate()
-                      {
-                          Speed = statsSwimmingStyleFromStore.Speed,
-                          Endurance = statsSwimmingStyleFromStore.Endurance,
-                          Technique = statsSwimmingStyleFromStore.Technique,
-                          Difficulty = statsSwimmingStyleFromStore.Difficulty
-                      };
-
-                  patchDoc.ApplyTo(statsSwimmingStyleToPatch, ModelState);
-
-                  if (!ModelState.IsValid)
-                  {
-                      return BadRequest(ModelState);
-                  }
-
-                  if (!TryValidateModel(statsSwimmingStyleToPatch))
-                  {
-                      return BadRequest(ModelState);
-                  }
-
-                  // need to mapping 
-                  statsSwimmingStyleFromStore.Speed = statsSwimmingStyleToPatch.Speed;
-                  statsSwimmingStyleFromStore.Endurance = statsSwimmingStyleToPatch.Endurance;
-                  statsSwimmingStyleFromStore.Technique = statsSwimmingStyleToPatch.Technique;
-                  statsSwimmingStyleFromStore.Difficulty = statsSwimmingStyleToPatch.Difficulty;
-                  return NoContent();
-              }
-
-
-              [HttpDelete("{StatsId}")]
-              public ActionResult DeleteStatsSwimmingStyle(int SwimmingStyleId, int StatsId)
-              {
-                  var swimmingStyle = SwimmingStyleDataStore.Current.SwimmingStyles
-                      .FirstOrDefault(swimmingStyle => swimmingStyle.SwimmingStyleId == SwimmingStyleId);
-                  if (swimmingStyle == null)
-                  {
-                      return NotFound();
-                  }
-                  // find swimming style
-                  var statsSwimmingStyleFromStore = swimmingStyle.StatsOfSwimmingStyle
-                      .FirstOrDefault(x => x.IdStats == StatsId);
-                  if (statsSwimmingStyleFromStore == null)
-                  {
-                      return NotFound();
-                  }
-                  swimmingStyle.StatsOfSwimmingStyle.Remove(statsSwimmingStyleFromStore);
-                  return NoContent();
-              }
-        */
+            var statsSwimmingStyleFromEntity = await _swimmingStyleRepository.GetStatOfSwimmingStyleAsync(SwimmingStyleId, StatsId);
+            if (statsSwimmingStyleFromEntity == null)
+            {
+                return NotFound();
+            }
+            _swimmingStyleRepository.DeleteStatSwimmingStyle(statsSwimmingStyleFromEntity);
+            await _swimmingStyleRepository.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

@@ -8,6 +8,8 @@ namespace SwimmingStyleAPI.Profiles
         {
             CreateMap<Entitites.StatsSwimmingstyleEntities, Models.StatsDto.StatsSwimmingstyleDto>();
             CreateMap<Models.StatsDto.StatsSwimmingstyleForCreationDto, Entitites.StatsSwimmingstyleEntities>();
+            CreateMap<Models.StatsDto.StatsSwimmingstyleForUpdateDto, Entitites.StatsSwimmingstyleEntities>();
+            CreateMap<Entitites.StatsSwimmingstyleEntities, Models.StatsDto.StatsSwimmingstyleForUpdateDto>();
         }
     }
 }
