@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Entitites;
 using SwimmingStyleAPI.Models.StatsDto;
-using SwimmingStyleAPI.Services;
+using SwimmingStyleAPI.Services.Interfaces;
 
 namespace SwimmingStyleAPI.Controllers
 {

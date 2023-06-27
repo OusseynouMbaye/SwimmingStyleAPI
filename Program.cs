@@ -7,7 +7,8 @@ using SwimmingStyleAPI.Validation;
 using SwimmingStyleAPI.Validation.StatsSwimmingstylevalidation;
 using SwimmingStyleAPI.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using SwimmingStyleAPI.Services;
+using SwimmingStyleAPI.Services.Interfaces;
+using SwimmingStyleAPI.Services.Implementation;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()

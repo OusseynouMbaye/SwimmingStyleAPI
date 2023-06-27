@@ -1,6 +1,6 @@
 ﻿using SwimmingStyleAPI.Entitites;
 
-namespace SwimmingStyleAPI.Services
+namespace SwimmingStyleAPI.Services.Interfaces
 {
     public interface ISwimmingStyleRepository
     {

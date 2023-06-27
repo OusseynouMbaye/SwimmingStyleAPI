@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SwimmingStyleAPI.DbContexts;
 using SwimmingStyleAPI.Entitites;
+using SwimmingStyleAPI.Services.Interfaces;
 
-namespace SwimmingStyleAPI.Services
+namespace SwimmingStyleAPI.Services.Implementation
 {
     public class SwimmingStyleRepository : ISwimmingStyleRepository
     {

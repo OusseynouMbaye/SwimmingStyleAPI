@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SwimmingStyleAPI.Models.SwimmingStyleDto;
-using SwimmingStyleAPI.Services;
+using SwimmingStyleAPI.Services.Interfaces;
 
 namespace SwimmingStyleAPI.Controllers
 {
